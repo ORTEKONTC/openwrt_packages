@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 include ../python3-version.mk
 
 PKG_NAME:=python3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_VERSION:=$(PYTHON3_VERSION).$(PYTHON3_VERSION_MICRO)
 
 PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
@@ -189,7 +189,15 @@ CONFIGURE_ARGS += \
 	--without-cxx-main \
 	--without-ensurepip \
 	$(if $(CONFIG_IPV6),--enable-ipv6) \
-	$(if $(findstring mips,$(CONFIG_ARCH)),,--with-lto)
+	$(if $(findstring mips,$(CONFIG_ARCH)),,--with-lto) \
+  --disable-ipv6 \
+  --without-c-locale-coercion \
+  --without-freelists \
+  --without-pymalloc \
+  --without-doc-strings \
+  --without-static-libpython \
+  --with-builtin-hashlib-hashes=md5,sha1,sha256 \
+  --with-ssl-default-suites=openssl
 
 define Build/Install
 	$(call Build/Install/Default,)
@@ -315,7 +323,6 @@ HOST_MAKE_VARS += \
 endif
 
 HOST_CONFIGURE_ARGS += \
-	--enable-optimizations \
 	--disable-test-modules \
 	--with-ensurepip=upgrade \
 	--with-ssl-default-suites=openssl \
